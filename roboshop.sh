@@ -1,0 +1,22 @@
+#!/bin/bash
+
+AMI_ID="ami-09c813fb71547fc4f"
+SG_ID="sg-05fa4b70472fe3598"
+HOSTED_ZONE="Z01824022CI9F0U27UQFL"
+DOMAIN_NAME="someshwar.fun"
+
+for instance in $@
+do
+    Instance_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t3.micro --security-group-ids sg-05fa4b70472fe3598 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Test}]' --query 'Instances[0].InstanceId' --output text)
+
+      # Get Private IP
+    if [ $instance != "frontend" ]; then
+        IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text)
+        RECORD_NAME="$instance.$DOMAIN_NAME" # mongodb.daws86s.fun
+    else
+        IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+        RECORD_NAME="$DOMAIN_NAME" # daws86s.fun
+    fi
+
+    echo "$instance: $IP"
+done
