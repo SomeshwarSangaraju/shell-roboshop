@@ -17,10 +17,10 @@ fi
 #checking the package is success or failure
 VALIDATE(){
     if [ $? -ne 0 ]; then
-        echo "ERROR:: Installing is ...... $R FAILURE $N"
+        echo -e "ERROR:: Installing is ...... $R FAILURE $N"
         exit 1
     else
-        echo "SUCCESS:: Installing is ........ $G SUCCESS $N"
+        echo -e "SUCCESS:: Installing is ........ $G SUCCESS $N"
     fi
 }
     
@@ -32,6 +32,6 @@ do
         dnf install $package -y
         VALIDATE $package
     else
-        echo "$package is already exists..... $Y SKIPPING $N"
+        echo -e "$package is already exists..... $Y SKIPPING $N"
     fi
 done
