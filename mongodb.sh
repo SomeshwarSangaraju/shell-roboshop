@@ -17,10 +17,10 @@ fi
 #checking the package is success or failure
 VALIDATE(){
     if [ $? -ne 0 ]; then
-        echo "ERROR:: Installing is ......$R FAILURE $N"
+        echo "ERROR:: Installing is ...... $R FAILURE $N"
         exit 1
     else
-        echo "SUCCESS:: Installing is ........$G SUCCESS $N"
+        echo "SUCCESS:: Installing is ........ $G SUCCESS $N"
     fi
 }
     
