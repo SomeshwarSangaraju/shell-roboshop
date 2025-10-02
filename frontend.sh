@@ -64,3 +64,6 @@ VALIDATE $? "Accessing nginx configurations"
 systemctl restart nginx
 VALIDATE $? "Restarting nginx"
 
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+echo -e "Script executed in: $Y $TOTAL_TIME Seconds $N"

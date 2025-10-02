@@ -88,3 +88,7 @@ VALIDATE $? "Loading Master data" | tee -a $LOG_FILE
 
 systemctl restart shipping
 VALIDATE $? "Restarting shipping" | tee -a $LOG_FILE
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+echo -e "Script executed in: $Y $TOTAL_TIME Seconds $N"
