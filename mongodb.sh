@@ -30,7 +30,7 @@ VALIDATE(){
     fi
 }
     
-cp $SCRIPT_DIR /etc/yum.repo.d/mongo.repo
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repo.d/mongo.repo
 VALIDATE "Adding mongo repo"
 
 
