@@ -1,5 +1,3 @@
-#!/bin/bash
-
 USERID=$(id -u)
 
 R="\e[31m"
@@ -50,58 +48,26 @@ fi
 mkdir -p /app 
 VALIDATE $? "creating directory" &>> $LOG_FILE
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
-VALIDATE $? "Downloading catalogue code" &>> $LOG_FILE
+curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
+VALIDATE $? "Downloading user code" &>> $LOG_FILE
 
 cd /app 
 VALIDATE $? "Changing directory" &>> $LOG_FILE
 
-unzip /tmp/catalogue.zip
+unzip /tmp/user.zip
 VALIDATE $? "Unziping catalogue" &>> $LOG_FILE
 
 npm install 
 VALIDATE $? "Installing dependencies" &>> $LOG_FILE
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
 VALIDATE $? "Accessing services" &>> $LOG_FILE
 
 systemctl daemon-reload
-VALIDATE $? "Reloading catalogue" &>> $LOG_FILE
+VALIDATE $? "Reloading user" &>> $LOG_FILE
 
-systemctl enable catalogue 
-VALIDATE $? "Enabling catalogue" &>> $LOG_FILE
+systemctl enable user 
+VALIDATE $? "Enabling user" &>> $LOG_FILE
 
-systemctl start catalogue
-VALIDATE $? "Starting catalogue" &>> $LOG_FILE
-
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "Accessing mongo repo" | tee -a $LOG_FILE
-
-dnf install mongodb-mongosh -y
-VALIDATE $? "Installing mongodb" &>> $LOG_FILE
-
-mongosh --host $MONGODB_IP </app/db/master-data.js
-VALIDATE $? "Loading Master data" | tee -a $LOG_FILE
-
-mongosh --host $MONGODB_IP
-VALIDATE $? "Checking connected to mongodb or not" | tee -a $LOG_FILE
-
-show dbs
-VALIDATE $? "showing dbs" | tee -a $LOG_FILE
-
-use catalogue
-VALIDATE $? "Selecting database" | tee -a $LOG_FILE
-
-show collections
-
-db.products.find()
-
-
-
-
-
-
-
-
-
-
+systemctl start user
+VALIDATE $? "Starting user" &>> $LOG_FILE

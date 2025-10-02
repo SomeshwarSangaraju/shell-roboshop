@@ -1,5 +1,3 @@
-#!/bin/bash
-
 USERID=$(id -u)
 
 R="\e[31m"
@@ -50,58 +48,26 @@ fi
 mkdir -p /app 
 VALIDATE $? "creating directory" &>> $LOG_FILE
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
-VALIDATE $? "Downloading catalogue code" &>> $LOG_FILE
+curl -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip 
+VALIDATE $? "Downloading cart code" &>> $LOG_FILE
 
 cd /app 
 VALIDATE $? "Changing directory" &>> $LOG_FILE
 
-unzip /tmp/catalogue.zip
-VALIDATE $? "Unziping catalogue" &>> $LOG_FILE
+unzip /tmp/cart.zip
+VALIDATE $? "Unziping cart" &>> $LOG_FILE
 
 npm install 
 VALIDATE $? "Installing dependencies" &>> $LOG_FILE
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
 VALIDATE $? "Accessing services" &>> $LOG_FILE
 
 systemctl daemon-reload
-VALIDATE $? "Reloading catalogue" &>> $LOG_FILE
+VALIDATE $? "Reloading cart" &>> $LOG_FILE
 
-systemctl enable catalogue 
-VALIDATE $? "Enabling catalogue" &>> $LOG_FILE
+systemctl enable cart 
+VALIDATE $? "Enabling cart" &>> $LOG_FILE
 
-systemctl start catalogue
-VALIDATE $? "Starting catalogue" &>> $LOG_FILE
-
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "Accessing mongo repo" | tee -a $LOG_FILE
-
-dnf install mongodb-mongosh -y
-VALIDATE $? "Installing mongodb" &>> $LOG_FILE
-
-mongosh --host $MONGODB_IP </app/db/master-data.js
-VALIDATE $? "Loading Master data" | tee -a $LOG_FILE
-
-mongosh --host $MONGODB_IP
-VALIDATE $? "Checking connected to mongodb or not" | tee -a $LOG_FILE
-
-show dbs
-VALIDATE $? "showing dbs" | tee -a $LOG_FILE
-
-use catalogue
-VALIDATE $? "Selecting database" | tee -a $LOG_FILE
-
-show collections
-
-db.products.find()
-
-
-
-
-
-
-
-
-
-
+systemctl start cart
+VALIDATE $? "Starting cart" &>> $LOG_FILE
