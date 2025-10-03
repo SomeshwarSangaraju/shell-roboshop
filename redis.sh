@@ -12,7 +12,7 @@ SCRIPT_DIR=$PWD
 START_TIME=$(date +%s)
 MONGODB_IP=mongodb.someshwar.fun
 
-mkdir -p LOG_FOLDER
+mkdir -p $LOG_FOLDER
 echo "Script started executed at: $(date)" | tee -a $LOG_FILE
 
 if [ $USERID -ne 0 ]; then
