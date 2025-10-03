@@ -36,20 +36,20 @@ VALIDATE(){
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE "Adding mongo repo"
 
-dnf install mongodb-org -y &>>$LOG_FILE
-VALIDATE "Installing mongodb"
+dnf install mongodb-org -y 
+VALIDATE "Installing mongodb" &>>$LOG_FILE
 
-systemctl enable mongod &>>$LOG_FILE
-VALIDATE "Enabling mongodb"
+systemctl enable mongod 
+VALIDATE "Enabling mongodb" &>>$LOG_FILE
 
-systemctl start mongod &>>$LOG_FILE
-VALIDATE "Starting mongodb"
+systemctl start mongod 
+VALIDATE "Starting mongodb" &>>$LOG_FILE
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
-VALIDATE "Allowing remote connections to mongodb"
+VALIDATE "Allowing remote connections to mongodb" &>>$LOG_FILE
 
 systemctl restart mongod
-VALIDATE "Restarting mongodb"
+VALIDATE "Restarting mongodb" &>>$LOG_FILE
 
 END_TIME=$(date +%s)
 TOTAL_TIME=$(( $END_TIME - $START_TIME ))
