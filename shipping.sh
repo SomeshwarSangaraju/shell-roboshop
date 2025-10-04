@@ -78,17 +78,27 @@ VALIDATE $? "Starting shipping" &>> $LOG_FILE
 dnf install mysql -y 
 VALIDATE $? "Installing Mysql" &>> $LOG_FILE
 
-mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/schema.sql
-VALIDATE $? "Loading schemas"  | tee -a $LOG_FILE
+# mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/schema.sql
+# VALIDATE $? "Loading schemas"  | tee -a $LOG_FILE
 
-mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/app-user.sql 
-VALIDATE $? "Creating App user" | tee -a $LOG_FILE
+# mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/app-user.sql 
+# VALIDATE $? "Creating App user" | tee -a $LOG_FILE
 
-mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/master-data.sql
-VALIDATE $? "Loading Master data" | tee -a $LOG_FILE
+# mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/master-data.sql
+# VALIDATE $? "Loading Master data" | tee -a $LOG_FILE
+
+mysql -h $MONGODB_IP -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
+if [ $? -ne 0 ]; then
+    mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+    mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/app-user.sql  &>>$LOG_FILE
+    mysql -h $MONGODB_IP -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+else
+    echo -e "Shipping data is already loaded ... $Y SKIPPING $N"
+fi
 
 systemctl restart shipping
 VALIDATE $? "Restarting shipping" | tee -a $LOG_FILE
+
 
 END_TIME=$(date +%s)
 TOTAL_TIME=$(( $END_TIME - $START_TIME ))
