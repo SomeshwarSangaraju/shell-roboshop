@@ -40,7 +40,7 @@ VALIDATE $? "Enabling nodejs" &>> $LOG_FILE
 dnf install nodejs -y
 VALIDATE $? "Installing nodejs" &>> $LOG_FILE
 
-id roboshop 
+id roboshop | tee -a $LOG_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop | tee -a $LOG_FILE
     VALIDATE $? "Creating System user"
