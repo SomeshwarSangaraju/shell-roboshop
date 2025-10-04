@@ -54,6 +54,9 @@ VALIDATE $? "Unziping payment" &>> $LOG_FILE
 pip3 install -r requirements.txt
 VALIDATE $? "Installing pip requirements" &>> $LOG_FILE
 
+cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
+VALIDATE $? "Accessing the services"
+
 systemctl daemon-reload
 VALIDATE $? "Reloading services" &>> $LOG_FILE
 
